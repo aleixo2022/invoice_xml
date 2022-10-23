@@ -25,11 +25,11 @@ for f in filelist:
 def updateNF():	
 	# sub função que processa xml a xml
 		def process_nf(nf, filename):
-		# Import BeautifulSoup
+		
 					with open(nf, 'r') as f:
 						file = f.read()
-					#processar xml 
-					soup = BeautifulSoup(file, 'xml') 
+					# alterando valores no XML 
+					soup = BeautifulSoup(file, 'xml') # BeautifulSoup
 					cnpj = soup.find_all('CNPJ')
 					for i in cnpj:
 							i.string = '36770176000270'
@@ -39,10 +39,11 @@ def updateNF():
 					tp = soup.find_all('tPag')
 					for i in tp:
 							i.string = '99'
+					# salva o valor alterado no arquivo
 					with open('C:/Users/alex/Downloads/Emitidas_Mercado_Livre/exe/data/'+filename, 'w') as f:
 								f.write(soup.prettify())
 		'''
-		buscar todos os arquivos 
+		buscar todos os arquivos a serem alterados
 		'''
 		file_list = sorted(glob(r'C:/Users/alex/Downloads/Emitidas_Mercado_Livre/NF-e de venda/XML/Autorizadas/*.xml'))
 
