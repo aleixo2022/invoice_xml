@@ -1,9 +1,10 @@
 import os
 import time
-import lxml
-from glob import glob
-from bs4 import BeautifulSoup
 from datetime import datetime
+from glob import glob
+
+import lxml
+from bs4 import BeautifulSoup
 
 ''''
 instalar dependencias cx_freeze
@@ -16,8 +17,23 @@ production:python ./setup.py build
 
 inicio = time.time()
 
+# substituir arquivo
+alter = '''
+<detPag>
+<tPag>99</tPag>
+</detPag>
+'''
+archive = sorted(glob(r'C:/xml_vendas/*.xml'))
+totalFile=0
+		# listando arquivos xml
+for i in archive:
+	totalFile+=1
+
+ 
+
+alter_soup = BeautifulSoup(alter, 'xml') # BeautifulSoup
 #apagando dados da pasta para alocar novos dados
-filelist = glob(r'C:/Users/alex/Downloads/Emitidas_Mercado_Livre/exe/data/*.xml')
+filelist = glob(r'C:/xml_processados/*.xml')
 for f in filelist:
     os.remove(f)
 
@@ -30,22 +46,21 @@ def updateNF():
 						file = f.read()
 					# alterando valores no XML 
 					soup = BeautifulSoup(file, 'xml') # BeautifulSoup
-					cnpj = soup.find_all('CNPJ')
+					cnpj = soup.emit.find_all('CNPJ')
 					for i in cnpj:
 							i.string = '36770176000270'
 					ean = soup.find_all('cEAN')
 					for i in ean:
 							i.string = soup.cProd.string
-					tp = soup.find_all('tPag')
-					for i in tp:
-							i.string = '99'
+					soup.pag.append(alter_soup)
+					
 					# salva o valor alterado no arquivo
-					with open('C:/Users/alex/Downloads/Emitidas_Mercado_Livre/exe/data/'+filename, 'w') as f:
+					with open('C:/xml_processados/'+filename, 'w') as f:
 								f.write(soup.prettify())
 		'''
 		buscar todos os arquivos a serem alterados
 		'''
-		file_list = sorted(glob(r'C:/Users/alex/Downloads/Emitidas_Mercado_Livre/NF-e de venda/XML/Autorizadas/*.xml'))
+		file_list = sorted(glob(r'C:/xml_vendas/*.xml'))
 
 		# listando arquivos xml
 		for i in file_list:
@@ -56,6 +71,6 @@ def updateNF():
 
 updateNF()
 fim = time.time()
-with open('C:/Users/alex/Downloads/Emitidas_Mercado_Livre/exe/data/log.text', 'w') as f:
-	f.write(f"Log de execução:\n * O tempo de Execução foi de {fim - inicio}.s\n Data processamento: {datetime.now()}")
+with open('C:/xml_processados/log.text', 'w') as f:
+	f.write(f"Log de execução:\nTotal de Arquivos Processados:{totalFile}\n * O tempo de Execução foi de {fim - inicio}s.\n Data processamento: {datetime.now()}")
 
