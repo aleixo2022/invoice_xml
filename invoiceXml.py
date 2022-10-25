@@ -46,7 +46,7 @@ def updateNF():
         # alterando valores no XML
         soup = BeautifulSoup(file, 'xml')  # BeautifulSoup
         cnpj = soup.emit.find_all('CNPJ')
-        busc = soup.emit.find_all('CNPJ',string ='36770176000170')         
+        busc = soup.emit.find_all('CNPJ', string='36770176000170')
         if busc:
             for i in cnpj:
                 i.string = '36770176000270'
@@ -57,7 +57,7 @@ def updateNF():
         ean = soup.find_all('cEAN')
         tPagf = soup.find_all('tPag')
         if tPagf:
-            #print("existe")
+            # print("existe")
             soup.pag.tPag.string = '99'
         else:
             npag = soup.find_all('pag')
@@ -68,14 +68,16 @@ def updateNF():
         for i in ean:
             i.string = soup.cProd.string
 
-        
-        #C:\xml_alpha
+        # local de processamento principal do arquivo
         dcnpj = soup.dest.find_all('CNPJ')
-        # fazendo backup dos alterados 
+        # fazendo backup dos alterados
         with open('C:/xml_backup_alterados/backup_'+filename, 'w') as f:
-                f.write(soup.prettify(formatter=None))
+            f.write(soup.prettify(formatter=None))
 
         # salva o valor alterado no arquivo
+        '''
+        Se destinatario possui CNPJ então salva em processados caso contrario salva na pasta millennium.
+        '''
         if dcnpj:
             with open('C:/xml_processados/'+filename, 'w') as f:
                 f.write(soup.prettify(formatter=None))
