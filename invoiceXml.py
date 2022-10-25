@@ -23,28 +23,28 @@ alter = '''
 '''
 archive = sorted(glob(r'C:/xml_vendas/*.xml'))
 totalFile = 0
-# listando arquivos xml
+# listando e contando arquivos xml
 for i in archive:
     totalFile += 1
 
-
-alter_soup = BeautifulSoup(alter, 'xml')  # BeautifulSoup
 # apagando dados da pasta para alocar novos dados
 # filelist = glob(r'C:/xml_vendas/*.xml')
 # for f in filelist:
 #     os.remove(f)
 
+
 # função prinicipal para processar dados e alterar xml
-
-
 def updateNF():
     # sub função que processa xml a xml
     def process_nf(nf, filename):
 
-        with open(nf, 'r') as f:
+        with open(nf, 'r') as f:  # lendo arquivos
             file = f.read()
         # alterando valores no XML
-        soup = BeautifulSoup(file, 'xml')  # BeautifulSoup
+        soup = BeautifulSoup(file, 'xml')
+        # fazendo backup dos arquivos XML intactos
+        with open('C:/xml_backup_alterados/venda_'+filename, 'w') as f:
+            f.write(soup.prettify(formatter=None))
         cnpj = soup.emit.find_all('CNPJ')
         busc = soup.emit.find_all('CNPJ', string='36770176000170')
         if busc:
@@ -82,7 +82,7 @@ def updateNF():
             with open('C:/xml_processados/'+filename, 'w') as f:
                 f.write(soup.prettify(formatter=None))
         else:
-            with open('C:/xml_alpha/'+filename, 'w') as f:
+            with open('D:/SYS/XML'+filename, 'w') as f:
                 f.write(soup.prettify(formatter=None))
     '''
 		buscar todos os arquivos a serem alterados
@@ -97,7 +97,11 @@ def updateNF():
 
 
 updateNF()
+# apagando dados da pasta vendas
+filelist = glob(r'C:/xml_vendas/*.xml')
+for f in filelist:
+    os.remove(f)
 fim = time.time()
-with open('C:/xml_processados/log.text', 'w') as f:
+with open('C:/xml_processados/log.txt', 'w') as f:
     f.write(
         f"Log de execução:\nTotal de Arquivos Processados:{totalFile}\n * O tempo de Execução foi de {fim - inicio}s.\n Data processamento: {datetime.now()}")
