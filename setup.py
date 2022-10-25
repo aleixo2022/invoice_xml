@@ -1,4 +1,5 @@
-from cx_Freeze import  setup, Executable
+from cx_Freeze import Executable, setup
+
 #para usar modelos/dependencias externas inserir em includes
 #, "includes":[]
 build_exe_options={"packages":["os"]}
@@ -11,7 +12,7 @@ build_exe_options={"packages":["os"]}
 
 setup(
     name="invoiceXml",
-    version="0.1",
+    version="0.5",
     description="altera XML's",
     options={"build_exe":build_exe_options},
     executables=[Executable("invoiceXml.py")]

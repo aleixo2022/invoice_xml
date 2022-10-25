@@ -30,9 +30,9 @@ for i in archive:
 
 alter_soup = BeautifulSoup(alter, 'xml')  # BeautifulSoup
 # apagando dados da pasta para alocar novos dados
-filelist = glob(r'C:/xml_processados/*.xml')
-for f in filelist:
-    os.remove(f)
+# filelist = glob(r'C:/xml_vendas/*.xml')
+# for f in filelist:
+#     os.remove(f)
 
 # função prinicipal para processar dados e alterar xml
 
@@ -46,19 +46,42 @@ def updateNF():
         # alterando valores no XML
         soup = BeautifulSoup(file, 'xml')  # BeautifulSoup
         cnpj = soup.emit.find_all('CNPJ')
-        for i in cnpj:
-            i.string = '36770176000270'
+        busc = soup.emit.find_all('CNPJ',string ='36770176000170')         
+        if busc:
+            for i in cnpj:
+                i.string = '36770176000270'
+        else:
+            for i in cnpj:
+                i.string = '17407833000274'
+
         ean = soup.find_all('cEAN')
-        npag = soup.find_all('pag')
-        for i in npag:
-            i.string = "<detPag><tPag>99</tPag></detPag>"
-        #print(soup.pag.prettify(formatter=None))
+        tPagf = soup.find_all('tPag')
+        if tPagf:
+            #print("existe")
+            soup.pag.tPag.string = '99'
+        else:
+            npag = soup.find_all('pag')
+            for i in npag:
+                i.string = "<detPag><tPag>99</tPag></detPag>"
+
+        # print(soup.pag.prettify(formatter=None))
         for i in ean:
             i.string = soup.cProd.string
 
+        
+        #C:\xml_alpha
+        dcnpj = soup.dest.find_all('CNPJ')
+        # fazendo backup dos alterados 
+        with open('C:/xml_backup_alterados/backup_'+filename, 'w') as f:
+                f.write(soup.prettify(formatter=None))
+
         # salva o valor alterado no arquivo
-        with open('C:/xml_processados/'+filename, 'w') as f:
-            f.write(soup.prettify(formatter=None))
+        if dcnpj:
+            with open('C:/xml_processados/'+filename, 'w') as f:
+                f.write(soup.prettify(formatter=None))
+        else:
+            with open('C:/xml_alpha/'+filename, 'w') as f:
+                f.write(soup.prettify(formatter=None))
     '''
 		buscar todos os arquivos a serem alterados
 		'''
