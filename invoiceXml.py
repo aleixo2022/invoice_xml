@@ -52,7 +52,7 @@ def updateNF():
         npag = soup.find_all('pag')
         for i in npag:
             i.string = "<detPag><tPag>99</tPag></detPag>"
-        print(soup.pag.prettify(formatter=None))
+        #print(soup.pag.prettify(formatter=None))
         for i in ean:
             i.string = soup.cProd.string
 
