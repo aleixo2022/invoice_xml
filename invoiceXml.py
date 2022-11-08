@@ -54,7 +54,7 @@ def updateNF():
             for i in cnpj:
                 i.string = '17407833000274'
 
-        ean = soup.find_all('cEAN')
+        # ean = soup.find_all('cEAN') informar todos os EAN
         tPagf = soup.find_all('tPag')
         if tPagf:
             # print("existe")
@@ -65,8 +65,11 @@ def updateNF():
                 i.string = "<detPag><tPag>99</tPag></detPag>"
 
         # print(soup.pag.prettify(formatter=None))
-        for i in ean:
-            i.string = soup.cProd.string
+        # verificando cada SKU existente
+        skuExist = soup.find_all('cProd')
+        for sku in skuExist:
+            ean = sku.find_next("cEAN")
+            ean.string = sku.string
 
         # local de processamento principal do arquivo
         dcnpj = soup.dest.find_all('CNPJ')
